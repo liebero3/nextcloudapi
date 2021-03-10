@@ -139,3 +139,10 @@ cython_debug/
 
 #secret credentials
 credentials.py
+
+# Pip
+Pipfile
+Pipfile.lock
+
+# vscode
+.vscode
