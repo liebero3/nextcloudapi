@@ -147,6 +147,7 @@ def removeUserToGroups(username: str, listofgroups: list):
         r = requests.delete(url, data=data, headers=headers)
     return r
 
+
 def promoteUserinGroup(username: str, listofgroups: list):
     '''
     Promotes a User to subadmin of one or many groups.
@@ -211,5 +212,3 @@ def resendWelcomemail(username: str):
 
     r = requests.post(url, headers=headers)
     return r
-
-print(resendWelcomemail('bpolert').text)
