@@ -183,7 +183,7 @@ def demoteUserinGroup(username: str, listofgroups: list):
     return r
 
 
-def getUserSubadminGroups(username: str, listofgroups: list):
+def getUserSubadminGroups(username: str):
     '''
     Promotes a User to subadmin of one or many groups.
     listofgroups is a list of groups as str
@@ -196,3 +196,20 @@ def getUserSubadminGroups(username: str, listofgroups: list):
 
     r = requests.get(url, headers=headers)
     return r
+
+
+def resendWelcomemail(username: str):
+    '''
+    Promotes a User to subadmin of one or many groups.
+    listofgroups is a list of groups as str
+    '''
+    url = BASE_URL + f'/users/{username}/welcome'
+    headers = {
+        'OCS-APIRequest': 'true',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    r = requests.post(url, headers=headers)
+    return r
+
+print(resendWelcomemail('bpolert').text)
