@@ -181,3 +181,18 @@ def demoteUserinGroup(username: str, listofgroups: list):
         }
         r = requests.delete(url, data=data, headers=headers)
     return r
+
+
+def getUserSubadminGroups(username: str, listofgroups: list):
+    '''
+    Promotes a User to subadmin of one or many groups.
+    listofgroups is a list of groups as str
+    '''
+    url = BASE_URL + f'/users/{username}/subadmins'
+    headers = {
+        'OCS-APIRequest': 'true',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    r = requests.get(url, headers=headers)
+    return r
