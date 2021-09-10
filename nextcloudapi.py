@@ -8,6 +8,7 @@ NEXTCLOUD_PASSWORD = credentials.password
 BASE_URL = f'https://{NEXTCLOUD_USERNAME}:{NEXTCLOUD_PASSWORD}@{NEXTCLOUD_URL}'
 
 
+
 def getUsers():
     '''
     List all users
@@ -28,7 +29,7 @@ def getUser(username: str):
     return r
 
 
-def addUser(username: str, password: str, listofgroups: list):
+def addUser(username: str, displayName: str, password: str, email: str, listofgroups: list, quota: str):
     '''
     listofgroups is a list of groups the user should be member of. Groups must exist before.
     '''
@@ -39,8 +40,11 @@ def addUser(username: str, password: str, listofgroups: list):
     }
     data = {
         'userid': f'{username}',
+        'displayName': f'{displayName}',
         'password': f'{password}',
-        'groups[]': listofgroups
+        'email': f'{email}',
+        'groups[]': listofgroups,
+        'quota': f'{quota}'
     }
     r = requests.post(url, data=data, headers=headers)
     return r
@@ -199,7 +203,7 @@ def getUserSubadminGroups(username: str):
     return r
 
 
-def resendWelcomemail(username: str):
+def resendWelcomeMail(username: str):
     '''
     Promotes a User to subadmin of one or many groups.
     listofgroups is a list of groups as str
@@ -212,3 +216,9 @@ def resendWelcomemail(username: str):
 
     r = requests.post(url, headers=headers)
     return r
+
+if __name__=="__main__":
+    # deleteUser("Testuser2")
+    
+    
+    print(getUsers().text)
