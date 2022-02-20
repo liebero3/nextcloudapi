@@ -8,7 +8,6 @@ NEXTCLOUD_PASSWORD = credentials.password
 BASE_URL = f'https://{NEXTCLOUD_USERNAME}:{NEXTCLOUD_PASSWORD}@{NEXTCLOUD_URL}'
 
 
-
 def getUsers():
     '''
     List all users
@@ -217,8 +216,8 @@ def resendWelcomeMail(username: str):
     r = requests.post(url, headers=headers)
     return r
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     # deleteUser("Testuser2")
-    
-    
+
     print(getUsers().text)
