@@ -453,6 +453,113 @@ def deleteAnOption(data: dict):
     return r
 
 
+
+
+def getFormSubmissions(formshash: str):
+    '''
+    Get all Submissions to a Form
+
+    Endpoint: /api/v1.1/submissions/{hash}
+    Url-Parameter:
+    Parameter	Type	Description
+    hash	    String	Hash of the form to get the submissions for
+    Method: GET
+    Response: An Array of all submissions, sorted as newest first, as well as an array of the corresponding questions.
+    "data": {
+    "submissions": [
+        {
+        "id": 6,
+        "formId": 3,
+        "userId": "jonas",
+        "timestamp": 1611274453,
+        "answers": [
+            {
+            "id": 8,
+            "submissionId": 6,
+            "questionId": 1,
+            "text": "Option 3"
+            },
+            {
+            "id": 9,
+            "submissionId": 6,
+            "questionId": 2,
+            "text": "One more."
+            },
+        ],
+        "userDisplayName": "jonas"
+        },
+        {
+        "id": 5,
+        "formId": 3,
+        "userId": "jonas",
+        "timestamp": 1611274433,
+        "answers": [
+            {
+            "id": 5,
+            "submissionId": 5,
+            "questionId": 1,
+            "text": "Option 2"
+            },
+            {
+            "id": 6,
+            "submissionId": 5,
+            "questionId": 2,
+            "text": "This is an answer."
+            },
+        ],
+        "userDisplayName": "jonas"
+        }
+    ],
+    "questions": [
+        {
+        "id": 1,
+        "formId": 3,
+        "order": 1,
+        "type": "dropdown",
+        "mandatory": false, // deprecated, will be removed in API v2
+        "isRequired": false,
+        "text": "Question 1",
+        "options": [
+            {
+            "id": 1,
+            "questionId": 1,
+            "text": "Option 1"
+            },
+            {
+            "id": 27,
+            "questionId": 1,
+            "text": "Option 2"
+            },
+            {
+            "id": 30,
+            "questionId": 1,
+            "text": "Option 3"
+            }
+        ]
+        },
+        {
+        "id": 2,
+        "formId": 3,
+        "order": 2,
+        "type": "short",
+        "mandatory": true, // deprecated will be removed in API v2
+        "isRequired": true,
+        "text": "Question 2",
+        "options": []
+        }
+    ]
+    }
+    '''
+    endpoint = '/api/v1.1/submissions'
+    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{formshash}'
+    headers = {'OCS-APIRequest': 'true'}
+    r = requests.get(url,
+                     auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                     headers=headers
+                     )
+    return r
+
+
 def getSubmissionsAsCSV(formshash: str):
     '''
     Returns all submissions to the form in form of a csv-file.
