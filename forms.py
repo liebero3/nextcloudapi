@@ -697,4 +697,7 @@ if __name__ == "__main__":
     # deleteAnOption()
     # getSubmissionsAsCSV()
     # exportSubmissionsToCloud()
+    # deleteSubmissions()
+    # insertASubmission()
+    # deleteASingleSubmission()
     pass
