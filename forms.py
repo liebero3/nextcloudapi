@@ -433,7 +433,7 @@ def updateOptionProperties(data: dict):
     return r
 
 
-def deleteAnOption(data: dict):
+def deleteAnOption(id: int):
     '''
     Endpoint: /api/v1.1/option/{id}
     Url-Parameter:
@@ -451,8 +451,6 @@ def deleteAnOption(data: dict):
                         headers=headers
                         )
     return r
-
-
 
 
 def getFormSubmissions(formshash: str):
@@ -606,6 +604,79 @@ def exportSubmissionsToCloud(formshash: str, path: str):
     headers = {'OCS-APIRequest': 'true'}
     r = requests.post(url, auth=(NEXTCLOUD_USERNAME,
                                  NEXTCLOUD_PASSWORD), headers=headers, json=data)
+    return r
+
+
+def deleteSubmissions(id: int):
+    '''
+    Delete all Submissions to a form
+
+    Endpoint: /api/v1.1/submissions/{formId}
+    Url-Parameter:
+    Parameter	Type	Description
+    formId	    Integer	ID of the form to delete the submissions for
+    Method: DELETE
+    Response: Status-Code OK, as well as the id of the corresponding form.
+    "data": 3
+    '''
+    endpoint = '/api/v1.1/submissions'
+    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{id}'
+    headers = {'OCS-APIRequest': 'true'}
+    r = requests.delete(url,
+                        auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                        headers=headers
+                        )
+    return r
+
+
+def insertASubmission(data: dict):
+    '''
+    Store Submission to Database
+
+    Endpoint: /api/v1.1/submission/insert
+    Method: POST
+    Parameters:
+    Parameter	Type	Description
+    formId	    Integer	ID of the form to submit into
+    answers	    Array	Array of Answers
+    The Array of Answers has the following structure:		
+    QuestionID as key
+    An array of values as value --> Even for short Text Answers, wrapped into Array.
+    For Question-Types with pre-defined answers (multiple, multiple_unique, dropdown), the array contains the corresponding option-IDs.
+    {
+    "1":[27,32],              // dropdown or multiple
+    "2":["ShortTextAnswer"],  // All Text-Based Question-Types
+    }
+    Response: Status-Code OK.
+    '''
+    endpoint = '/api/v1.1/submission/insert'
+    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
+    headers = {'OCS-APIRequest': 'true'}
+    r = requests.post(url,
+                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                      headers=headers,
+                      json=data
+                      )
+    return r
+
+
+def deleteASingleSubmission(id: int):
+    '''
+    Endpoint: /api/v1.1/submission/{id}
+    Url-Parameter:
+    Parameter	Type	Description
+    id	        Integer	ID of the submission to delete
+    Method: DELETE
+    Response: Status-Code OK, as well as the id of the deleted submission.
+    "data": 5
+    '''
+    endpoint = '/api/v1.1/submission'
+    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{id}'
+    headers = {'OCS-APIRequest': 'true'}
+    r = requests.delete(url,
+                        auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                        headers=headers
+                        )
     return r
 
 
