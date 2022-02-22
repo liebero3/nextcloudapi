@@ -681,7 +681,8 @@ def deleteASingleSubmission(id: int):
 
 
 if __name__ == "__main__":
-    # listOwnedForms()
+    r = listOwnedForms()
+    print(f"Status Code: {r.status_code}, \nResponse: \n{r.text}")
     # listSharedForms()
     # createNewForm()
     # requestFullDataOfAForm()
