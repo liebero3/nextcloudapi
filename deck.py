@@ -1,11 +1,13 @@
 import requests
 import credentials
+import json
 
 NEXTCLOUD_URL = credentials.url2
 NEXTCLOUD_USERNAME = credentials.username
 NEXTCLOUD_PASSWORD = credentials.password
 NEXTCLOUD_FORM = credentials.form
 NEXTCLOUD_APP = 'apps/deck'
+
 
 def getAListOfBoards(data: dict):
     '''
@@ -58,6 +60,7 @@ def getAListOfBoards(data: dict):
                      json=data
                      )
     return r
+
 
 def createANewBoard(data: dict):
     '''
@@ -127,13 +130,93 @@ def createANewBoard(data: dict):
     url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
     headers = {'OCS-APIRequest': 'true'}
     r = requests.post(url,
+                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                      headers=headers,
+                      json=data
+                      )
+    return r
+
+
+def getBoardDetails(id: int, data: dict):
+    '''
+    Request parameters
+    Parameter	Type	Description
+    boardId	    Integer	The id of the board to fetch
+    Response
+    200 Success
+    {
+        "title": "Board title",
+        "owner": {
+            "primaryKey": "admin",
+            "uid": "admin",
+            "displayname": "Administrator"
+        },
+        "color": "ff0000",
+        "archived": false,
+        "labels": [
+            {
+                "title": "Finished",
+                "color": "31CC7C",
+                "boardId": "10",
+                "cardId": null,
+                "id": 37
+            },
+            {
+                "title": "To review",
+                "color": "317CCC",
+                "boardId": "10",
+                "cardId": null,
+                "id": 38
+            },
+            {
+                "title": "Action needed",
+                "color": "FF7A66",
+                "boardId": "10",
+                "cardId": null,
+                "id": 39
+            },
+            {
+                "title": "Later",
+                "color": "F1DB50",
+                "boardId": "10",
+                "cardId": null,
+                "id": 40
+            }
+        ],
+        "acl": [],
+        "permissions": {
+            "PERMISSION_READ": true,
+            "PERMISSION_EDIT": true,
+            "PERMISSION_MANAGE": true,
+            "PERMISSION_SHARE": true
+        },
+        "users": [
+            {
+                "primaryKey": "admin",
+                "uid": "admin",
+                "displayname": "Administrator"
+            }
+        ],
+        "deletedAt": 0,
+        "id": 10
+    }
+    '''
+    endpoint = f'/api/v1.1/boards/{id}'
+    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
+    headers = {'OCS-APIRequest': 'true'}
+    r = requests.get(url,
                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                      headers=headers,
                      json=data
                      )
+    return r
+
 
 if __name__ == "__main__":
-    createANewBoard({"title":"Board mit API", "color":"ff0000"})
-    r = getAListOfBoards({"details":"true"})
+    # createANewBoard({"title":"Board mit API", "color":"ff0000"})
+    # r = getAListOfBoards({"details":"true"})
+    # r = getBoardDetails(2{"boardId": 2})
+    r = getBoardDetails(2, {"boardId":2})
+    print(r.text)
     # print(f"Status Code: {r.status_code}, \nResponse: \n{r.text}")
-    print(f"Status Code: {r.status_code}, \nResponse: \n{r.json()}")
+    # print(f"Status Code: {r.status_code}, \nResponse: \n{r.json()}")

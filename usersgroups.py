@@ -1,11 +1,13 @@
 import requests
 import credentials
+from lxml import etree
 
-NEXTCLOUD_URL = credentials.url
+NEXTCLOUD_URL = credentials.url3
 NEXTCLOUD_USERNAME = credentials.username
 NEXTCLOUD_PASSWORD = credentials.password
 
-BASE_URL = f'https://{NEXTCLOUD_USERNAME}:{NEXTCLOUD_PASSWORD}@{NEXTCLOUD_URL}'
+BASE_URL = f'https://{NEXTCLOUD_USERNAME}:{NEXTCLOUD_PASSWORD}@{NEXTCLOUD_URL.replace("https://", "")}'
+# print(BASE_URL)
 
 
 def getUsers():
@@ -217,7 +219,38 @@ def resendWelcomeMail(username: str):
     return r
 
 
-if __name__ == "__main__":
-    # deleteUser("Testuser2")
+def createGroups(listofgroups: list):
+    '''
+    create groups by passing list of groups. (also for a single group as list!)
+    '''
+    url = BASE_URL + f'/groups'
+    headers = {
+        'OCS-APIRequest': 'true',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    for group in listofgroups:
+        data = {
+            'groupid': group
+        }
+        r = requests.post(url, data=data, headers=headers)
+    return r
 
-    print(getUsers().text)
+
+if __name__ == "__main__":
+    response = getUsers().text
+    root = etree.fromstring(response)
+    ncusers = list(root[1][0])
+
+    # '''Allen Usern mit numerischem username eine Quota von 100 MB geben'''
+    # for u in ncusers:
+    #     if u.text.isnumeric():
+    #         editUser(u.text, {'key':'quota', 'value':'104857600'})
+
+    # '''Alle kompletten details von usern ausgeben'''
+    # for u in ncusers:
+    #     print(getUser(u.text).text)
+
+    '''Gruppen anlegen'''
+    gruppenliste = []
+    # createGroups(gruppenliste)
+    print(len(gruppenliste))
