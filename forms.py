@@ -1,11 +1,11 @@
 import requests
 import credentials
 
-NEXTCLOUD_URL = credentials.url
+NEXTCLOUD_URL_FORMS = credentials.url
 NEXTCLOUD_USERNAME = credentials.username
 NEXTCLOUD_PASSWORD = credentials.password
 NEXTCLOUD_FORM = credentials.form
-NEXTCLOUD_APP = 'apps/forms'
+NEXTCLOUD_APP_FORMS = 'apps/forms'
 
 
 def listOwnedForms():
@@ -34,8 +34,8 @@ def listOwnedForms():
     ]
     '''
     endpoint = '/api/v1.1/forms'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.get(url,
                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                      headers=headers
@@ -55,8 +55,8 @@ def listSharedForms():
     See above, 'List owned forms'
     '''
     endpoint = '/api/v1.1/shared_forms'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.get(url,
                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                      headers=headers
@@ -88,8 +88,8 @@ def createNewForm():
     }
     '''
     endpoint = '/api/v1.1/form'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.post(url,
                       auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                       headers=headers
@@ -159,8 +159,8 @@ def requestFullDataOfAForm(id: int):
     }
     '''
     endpoint = '/api/v1.1/form'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{id}'
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint + f'/{id}'
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.get(url,
                      auth=(NEXTCLOUD_USERNAME,  NEXTCLOUD_PASSWORD),
                      headers=headers
@@ -182,8 +182,8 @@ def cloneAForm(id: int):
 
     '''
     endpoint = '/api/v1.1/form/clone'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{id}'
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint + f'/{id}'
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.post(url,
                       auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                       headers=headers
@@ -211,9 +211,11 @@ def updateFormProperties(data: dict):
     "data": 3
     '''
     endpoint = '/api/v1.1/form/update'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
     headers = {
         'OCS-APIRequest': 'true',
+        'Accept': 'application/json'
+
         # 'Content-Type': 'application/x-www-form-urlencoded'
     }
     r = requests.post(url,
@@ -235,8 +237,8 @@ def deleteAForm(id: int, keyValuePairs: dict):
     "data": 3
     '''
     endpoint = '/api/v1.1/form'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{id}'
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint + f'/{id}'
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.delete(url,
                         auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                         headers=headers
@@ -278,9 +280,11 @@ def createANewQuestion(data: dict):
     datetime	        Showing a dropdown calendar to select a date and a time.
     '''
     endpoint = '/api/v1.1/question'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
     headers = {
         'OCS-APIRequest': 'true',
+        'Accept': 'application/json'
+
         # 'Content-Type': 'application/x-www-form-urlencoded'
     }
     r = requests.post(url,
@@ -307,9 +311,11 @@ def updateQuestionProperties(data: dict):
     "data": 1
     '''
     endpoint = '/api/v1.1/question/update'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
     headers = {
         'OCS-APIRequest': 'true',
+        'Accept': 'application/json'
+
         # 'Content-Type': 'application/x-www-form-urlencoded'
     }
     r = requests.post(url,
@@ -345,9 +351,10 @@ def reorderQuestions(data: dict):
     }
     '''
     endpoint = '/api/v1.1/question/reorder'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
     headers = {
         'OCS-APIRequest': 'true',
+        'Accept': 'application/json'
         # 'Content-Type': 'application/x-www-form-urlencoded'
     }
     r = requests.post(url,
@@ -369,9 +376,10 @@ def deleteAQuestion(id: int):
     "data": 4
     '''
     endpoint = '/api/v1.1/question'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{id}'
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint + f'/{id}'
     headers = {
         'OCS-APIRequest': 'true',
+        'Accept': 'application/json'
         # 'Content-Type': 'application/x-www-form-urlencoded'
     }
     r = requests.delete(url,
@@ -400,8 +408,8 @@ def createANewOption(data: dict):
     }
     '''
     endpoint = '/api/v1.1/option'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.post(url,
                       auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                       headers=headers,
@@ -423,8 +431,8 @@ def updateOptionProperties(data: dict):
     "data": 7
     '''
     endpoint = '/api/v1.1/option/update'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.post(url,
                       auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                       headers=headers,
@@ -444,8 +452,8 @@ def deleteAnOption(id: int):
     "data": 7
     '''
     endpoint = '/api/v1.1/option'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{id}'
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint + f'/{id}'
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.delete(url,
                         auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                         headers=headers
@@ -549,8 +557,10 @@ def getFormSubmissions(formshash: str):
     }
     '''
     endpoint = '/api/v1.1/submissions'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{formshash}'
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint + f'/{formshash}'
+    headers = {'OCS-APIRequest': 'true',
+               'Accept': 'application/json'
+              }
     r = requests.get(url,
                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                      headers=headers
@@ -573,8 +583,10 @@ def getSubmissionsAsCSV(formshash: str):
     comma separated and escaped csv.
     '''
     endpoint = '/api/v1.1/submissions/export'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{formshash}'
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint + f'/{formshash}'
+    headers = {'OCS-APIRequest': 'true',
+               'Accept': 'application/json'
+              }
     r = requests.get(url,
                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                      headers=headers
@@ -596,12 +608,12 @@ def exportSubmissionsToCloud(formshash: str, path: str):
     "data": "Form 2 (responses).csv"
     '''
     endpoint = '/api/v1.1/submissions/export'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
     data = {
         "hash": formshash,
         "path": path
     }
-    headers = {'OCS-APIRequest': 'true'}
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.post(url, auth=(NEXTCLOUD_USERNAME,
                                  NEXTCLOUD_PASSWORD), headers=headers, json=data)
     return r
@@ -620,8 +632,8 @@ def deleteSubmissions(id: int):
     "data": 3
     '''
     endpoint = '/api/v1.1/submissions'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{id}'
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint + f'/{id}'
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.delete(url,
                         auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                         headers=headers
@@ -650,8 +662,8 @@ def insertASubmission(data: dict):
     Response: Status-Code OK.
     '''
     endpoint = '/api/v1.1/submission/insert'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.post(url,
                       auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                       headers=headers,
@@ -671,8 +683,8 @@ def deleteASingleSubmission(id: int):
     "data": 5
     '''
     endpoint = '/api/v1.1/submission'
-    url = NEXTCLOUD_URL + NEXTCLOUD_APP + endpoint + f'/{id}'
-    headers = {'OCS-APIRequest': 'true'}
+    url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint + f'/{id}'
+    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.delete(url,
                         auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                         headers=headers
