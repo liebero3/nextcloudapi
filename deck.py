@@ -567,5 +567,17 @@ def unassignAUserFromACard(id: int, stackId: int, cardId: int, data: dict):  # ,
 
 
 if __name__ == "__main__":
-    r = getBoardDetails(2).json()  # , {"boardId":2}
-    print(json.dumps(r, indent=2))
+    pass
+    # '''List all stacks in deck'''
+    # stacks = getStacks(42).json()
+    # for stack in stacks:
+    #     print(stack["title"], stack["id"])
+
+    # '''List all titles of cards in deck'''
+    # for stack in stacks:
+    #     try:
+    #         cards = stack["cards"]
+    #         for card in cards:
+    #             print(card["title"])
+    #     except:
+    #         pass

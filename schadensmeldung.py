@@ -75,7 +75,15 @@ def getNewSubmissions(file, data):
         print(sub.author, sub.type, sub.text, sub.location, sub.timestamp)
 
 
-
+def returnDataForNewCard(sub: NewSubmission):
+    carddata = {
+        "title": f"{sub.type}: {sub.location}",
+        "type": "plain",
+        "order": 999,
+        "description": f"{sub.text}\n{sub.author}",
+        "duedate": f"{sub.timestamp}"
+    }
+    return carddata
 
 if __name__ == '__main__':
     file = "answers.csv"
@@ -83,12 +91,16 @@ if __name__ == '__main__':
     errors = []
     data = getAllSubmissions()
     getNewSubmissions(file, data)
+    for error in errors:
+        carddata = returnDataForNewCard(error)
+        createANewCard(42, 121, carddata)
+
     # r = getAListOfBoards({"details":"true"}).json()
     # for item in r:
     #     print(json.dumps(item, indent=2))
 
-    board = getCardDetails(42,121,272).json()
-    print(json.dumps(board, indent=2))
+    # board = getCardDetails(42,121,272).json()
+    # print(json.dumps(board, indent=2))
 
     # for item in board:
     #     print(json.dumps(item, indent=2))
