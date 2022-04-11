@@ -568,16 +568,23 @@ def unassignAUserFromACard(id: int, stackId: int, cardId: int, data: dict):  # ,
 
 if __name__ == "__main__":
     pass
+
+    # '''list all boards'''
+    # boards = getAListOfBoards({"details":"false"}).json()
+    # for board in boards:
+    #     print(board["title"], board["id"])
+
     # '''List all stacks in deck'''
     # stacks = getStacks(42).json()
     # for stack in stacks:
     #     print(stack["title"], stack["id"])
 
     # '''List all titles of cards in deck'''
+    # stacks = getStacks(42).json()
     # for stack in stacks:
     #     try:
     #         cards = stack["cards"]
     #         for card in cards:
-    #             print(card["title"])
+    #             print(card["title"], card["id"])
     #     except:
     #         pass
