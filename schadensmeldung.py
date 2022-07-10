@@ -62,17 +62,20 @@ def getNewSubmissions(file, data):
             print(f'Beitrag mit id {answer["id"]} ist neu und wird hinzugefügt.')
             answers.append(answer["id"])
             setHash(file)
+            # just debugging purposes
             print(answer["answers"][0]["text"])  # text
             print(answer["answers"][1]["text"])  # type
             print(answer["answers"][2]["text"])  # room
             print(answer["timestamp"])  # timestamp
             print(answer["userId"])  # userId
+            # cast str to datetime
             utc_time = datetime.fromtimestamp(answer["timestamp"], timezone.utc)
             local_time = utc_time.astimezone().strftime("%Y-%m-%d %H:%M:%S")
-            errors.append(NewSubmission(
+            # append new submission to list of new submissions
+            tickets.append(NewSubmission(
                 answer["userId"], answer["answers"][1]["text"], answer["answers"][0]["text"], answer["answers"][2]["text"], local_time))
-    for sub in errors:
-        print(sub.author, sub.type, sub.text, sub.location, sub.timestamp)
+    for ticket in tickets:
+        print(ticket.author, ticket.type, ticket.text, ticket.location, ticket.timestamp)
 
 
 def returnDataForNewCard(sub: NewSubmission):
@@ -88,11 +91,11 @@ def returnDataForNewCard(sub: NewSubmission):
 if __name__ == '__main__':
     file = "answers.csv"
     answers = getHash(file)
-    errors = []
+    tickets = []
     data = getAllSubmissions()
     getNewSubmissions(file, data)
-    for error in errors:
-        carddata = returnDataForNewCard(error)
+    for ticket in tickets:
+        carddata = returnDataForNewCard(ticket)
         createANewCard(42, 121, carddata)
 
     # r = getAListOfBoards({"details":"true"}).json()
