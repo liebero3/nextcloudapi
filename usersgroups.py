@@ -1,6 +1,7 @@
 import requests
 import credentials
 from lxml import etree
+import csv
 
 NEXTCLOUD_URL = credentials.url3
 NEXTCLOUD_USERNAME = credentials.username
@@ -43,7 +44,7 @@ def addUser(username: str, displayName: str, password: str, email: str, listofgr
         'userid': f'{username}',
         'displayName': f'{displayName}',
         'password': f'{password}',
-        'email': f'{email}',
+        'email': f'{f"{username}@example.com" if "" else email}',
         'groups[]': listofgroups,
         'quota': f'{quota}'
     }
@@ -218,7 +219,19 @@ def resendWelcomeMail(username: str):
     r = requests.post(url, headers=headers)
     return r
 
-
+def getGroups():
+    '''
+    Retrieves a list of groups from the Nextcloud server.
+    Authentication is done by sending a Basic HTTP Authorization header.
+    '''
+    url = BASE_URL + f'/groups'
+    headers = {
+        'OCS-APIRequest': 'true',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    r = requests.get(url, headers=headers)
+    return r
+    
 def createGroups(listofgroups: list):
     '''
     create groups by passing list of groups. (also for a single group as list!)
@@ -233,6 +246,7 @@ def createGroups(listofgroups: list):
             'groupid': group
         }
         r = requests.post(url, data=data, headers=headers)
+        print(f"{group} wurde erstellt")
     return r
 
 
@@ -241,16 +255,48 @@ if __name__ == "__main__":
     root = etree.fromstring(response)
     ncusers = list(root[1][0])
 
-    # '''Allen Usern mit numerischem username eine Quota von 100 MB geben'''
+    '''Allen Usern mit numerischem username eine Quota von 100 MB geben'''
     # for u in ncusers:
     #     if u.text.isnumeric():
     #         editUser(u.text, {'key':'quota', 'value':'104857600'})
 
-    # '''Alle kompletten details von usern ausgeben'''
+    '''Alle kompletten details von usern ausgeben'''
     # for u in ncusers:
     #     print(getUser(u.text).text)
+    '''Gruppen ausgeben:'''
+    # print(getGroups().text)
 
     '''Gruppen anlegen'''
-    gruppenliste = []
-    # createGroups(gruppenliste)
-    print(len(gruppenliste))
+    # with open('gruppen_schild.csv', newline='') as f:
+    #     reader = csv.reader(f)
+    #     data = list(reader)
+    # data = [item for sublist in data for item in sublist]
+    # data = list(set(data))
+    # print(data)
+    # createGroups(data)
+    # print(len(gruppenliste))
+
+    '''Usern aus csv zu Gruppen hinzufuegen'''
+    # with open('testuser.csv', newline='') as f:
+    #     reader = csv.reader(f, delimiter=';')
+    #     data = list(reader)
+    # print(data)
+    # for user in data:
+    #     # Zur Sicherheit Gruppe erstellen, in die eingefügt werden soll
+    #     groups = []
+    #     groups.append(user[4])
+    #     b = createGroups(groups)
+    #     print(b.text)
+    #     # zuerst versuchen den user zu erstellen. Sollte er schon existieren, gibt es Fehlermeldung
+    #     a = addUser(user[2], f"{user[0]} {user[1]}", user[3], "", [f"{user[4]}"], '104857600')
+    #     print(a.text)
+    #     # sollte er schon existieren, user zu gruppen hinzufuegen.
+    #     c = addUserToGroups(f"{user[2]}", groups)
+
+    with open('testuser.csv', newline='') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = list(reader)
+    # print(data)
+    for user in data:
+        a = getUserGroups(user[2])
+        print(a.text)
