@@ -219,6 +219,7 @@ def resendWelcomeMail(username: str):
     r = requests.post(url, headers=headers)
     return r
 
+
 def getGroups():
     '''
     Retrieves a list of groups from the Nextcloud server.
@@ -231,7 +232,8 @@ def getGroups():
     }
     r = requests.get(url, headers=headers)
     return r
-    
+
+
 def createGroups(listofgroups: list):
     '''
     create groups by passing list of groups. (also for a single group as list!)
@@ -276,27 +278,27 @@ if __name__ == "__main__":
     # createGroups(data)
     # print(len(gruppenliste))
 
-    '''Usern aus csv zu Gruppen hinzufuegen'''
-    # with open('testuser.csv', newline='') as f:
-    #     reader = csv.reader(f, delimiter=';')
-    #     data = list(reader)
-    # print(data)
-    # for user in data:
-    #     # Zur Sicherheit Gruppe erstellen, in die eingefügt werden soll
-    #     groups = []
-    #     groups.append(user[4])
-    #     b = createGroups(groups)
-    #     print(b.text)
-    #     # zuerst versuchen den user zu erstellen. Sollte er schon existieren, gibt es Fehlermeldung
-    #     a = addUser(user[2], f"{user[0]} {user[1]}", user[3], "", [f"{user[4]}"], '104857600')
-    #     print(a.text)
-    #     # sollte er schon existieren, user zu gruppen hinzufuegen.
-    #     c = addUserToGroups(f"{user[2]}", groups)
-
+    '''User aus csv zu Gruppen hinzufuegen'''
     with open('testuser.csv', newline='') as f:
         reader = csv.reader(f, delimiter=';')
         data = list(reader)
-    # print(data)
+
     for user in data:
-        a = getUserGroups(user[2])
+        if user[0] == "Vorname":
+            continue
+        # Zur Sicherheit Gruppe erstellen, in die eingefuegt werden soll
+        groups = []
+        groups.append(user[4])
+        b = createGroups(groups)
+        print(b.text)
+        # User aus angegebener Gruppe loeschen
+        liste = []
+        liste.append(user[5])
+        a = removeUserToGroups(user[2], liste)
         print(a.text)
+        # zuerst versuchen den user zu erstellen. Sollte er schon existieren, gibt es Fehlermeldung
+        a = addUser(user[2], f"{user[0]} {user[1]}",
+                    user[3], "", [f"{user[4]}"], '104857600')
+        print(a.text)
+        # sollte er schon existieren, user zu Gruppen hinzufuegen.
+        c = addUserToGroups(f"{user[2]}", groups)
