@@ -1,6 +1,7 @@
 import requests
 import credentials
 import json
+import os
 
 NEXTCLOUD_URL_DECK = credentials.url2
 NEXTCLOUD_USERNAME = credentials.username
@@ -230,6 +231,7 @@ def UpdateBoardDetails(id: int, data: dict):
                      )
     return r
 
+
 def deleteABoard(id: int):  # , data: dict
     '''
     response: 200 Sucess
@@ -238,11 +240,12 @@ def deleteABoard(id: int):  # , data: dict
     url = NEXTCLOUD_URL_DECK + NEXTCLOUD_APP_DECK + endpoint
     headers = {'OCS-APIRequest': 'true'}
     r = requests.delete(url,
-                     auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
-                     headers=headers,
-                     # json=data
-                     )
+                        auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                        headers=headers,
+                        # json=data
+                        )
     return r
+
 
 def restoreADeletedBoard(id: int):  # , data: dict
     '''
@@ -252,11 +255,12 @@ def restoreADeletedBoard(id: int):  # , data: dict
     url = NEXTCLOUD_URL_DECK + NEXTCLOUD_APP_DECK + endpoint
     headers = {'OCS-APIRequest': 'true'}
     r = requests.post(url,
-                     auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
-                     headers=headers,
-                     # json=data
-                     )
+                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                      headers=headers,
+                      # json=data
+                      )
     return r
+
 
 # TODO: ACL-API
 '''
@@ -301,6 +305,7 @@ Response
 200 Success
 '''
 
+
 def getStacks(id: int):  # , data: dict
     '''
     response:
@@ -325,6 +330,7 @@ def getStacks(id: int):  # , data: dict
                      # json=data
                      )
     return r
+
 
 def getListOfArchivedStacks(id: int):  # , data: dict
     '''
@@ -351,6 +357,7 @@ def getListOfArchivedStacks(id: int):  # , data: dict
                      )
     return r
 
+
 def getStackDetails(id: int, stackId: int):  # , data: dict
     '''
     response:
@@ -376,6 +383,7 @@ def getStackDetails(id: int, stackId: int):  # , data: dict
                      )
     return r
 
+
 def createANewStack(id: int, data: dict):  # , data: dict
     '''
     {
@@ -387,11 +395,12 @@ def createANewStack(id: int, data: dict):  # , data: dict
     url = NEXTCLOUD_URL_DECK + NEXTCLOUD_APP_DECK + endpoint
     headers = {'OCS-APIRequest': 'true'}
     r = requests.post(url,
-                     auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
-                     headers=headers,
-                     json=data
-                     )
+                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                      headers=headers,
+                      json=data
+                      )
     return r
+
 
 def updateStackDetails(id: int, stackId: int, data: dict):  # , data: dict
     '''
@@ -419,11 +428,12 @@ def deleteAStack(id: int, stackId: int):  # , data: dict
     url = NEXTCLOUD_URL_DECK + NEXTCLOUD_APP_DECK + endpoint
     headers = {'OCS-APIRequest': 'true'}
     r = requests.delete(url,
-                     auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
-                     headers=headers,
-                    #  json=data
-                     )
+                        auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                        headers=headers,
+                        #  json=data
+                        )
     return r
+
 
 def getCardDetails(id: int, stackId: int, cardId: int):  # , data: dict
     '''
@@ -435,9 +445,10 @@ def getCardDetails(id: int, stackId: int, cardId: int):  # , data: dict
     r = requests.get(url,
                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                      headers=headers,
-                    #  json=data
+                     #  json=data
                      )
     return r
+
 
 def createANewCard(id: int, stackId: int, data: dict):  # , data: dict
     '''
@@ -451,12 +462,13 @@ def createANewCard(id: int, stackId: int, data: dict):  # , data: dict
     '''
     endpoint = f'/api/v1.1/boards/{id}/stacks/{stackId}/cards'
     url = NEXTCLOUD_URL_DECK + NEXTCLOUD_APP_DECK + endpoint
+    print(url)
     headers = {'OCS-APIRequest': 'true'}
     r = requests.post(url,
-                     auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
-                     headers=headers,
-                     json=data
-                     )
+                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                      headers=headers,
+                      json=data
+                      )
     return r
 
 
@@ -495,11 +507,12 @@ def deleteCard(id: int, stackId: int, cardId: int):  # , data: dict
     url = NEXTCLOUD_URL_DECK + NEXTCLOUD_APP_DECK + endpoint
     headers = {'OCS-APIRequest': 'true'}
     r = requests.delete(url,
-                     auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
-                     headers=headers,
-                    #  json=data
-                     )
+                        auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                        headers=headers,
+                        #  json=data
+                        )
     return r
+
 
 def assignALabelToACard(id: int, stackId: int, cardId: int, data: dict):  # , data: dict
     '''
@@ -517,6 +530,7 @@ def assignALabelToACard(id: int, stackId: int, cardId: int, data: dict):  # , da
                      )
     return r
 
+
 def removeALabelFromACard(id: int, stackId: int, cardId: int, data: dict):  # , data: dict
     '''
     {
@@ -533,6 +547,7 @@ def removeALabelFromACard(id: int, stackId: int, cardId: int, data: dict):  # , 
                      )
     return r
 
+
 def assignAUserToACard(id: int, stackId: int, cardId: int, data: dict):  # , data: dict
     '''
     {
@@ -548,6 +563,7 @@ def assignAUserToACard(id: int, stackId: int, cardId: int, data: dict):  # , dat
                      json=data
                      )
     return r
+
 
 def unassignAUserFromACard(id: int, stackId: int, cardId: int, data: dict):  # , data: dict
     '''
@@ -566,6 +582,47 @@ def unassignAUserFromACard(id: int, stackId: int, cardId: int, data: dict):  # ,
     return r
 
 
+# def uploadAttachment(id: int, stackId: int, cardId: int, type: dict, filepath: str):  # , data: dict
+#     '''
+#     {
+#         "type": "String: Type of the card (later), for now: plain",
+#         "file": "Binary: The file to upload",
+#     }
+#     '''
+#     endpoint = f'/api/v1.1/boards/{id}/stacks/{stackId}/cards/{cardId}/attachments'
+#     url = NEXTCLOUD_URL_DECK + NEXTCLOUD_APP_DECK + endpoint
+#     print(url)
+#     headers = {'OCS-APIRequest': 'true'}
+#     with open(filepath, 'rb') as file:
+#         files = {"file": file}
+#         r = requests.post(url,
+#                         auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+#                         headers=headers,
+#                         json=type,
+#                         files=files
+#                         )
+#     return r
+
+
+def uploadAttachment(id: int, stackId: int, cardId: int, file_path: str, attachment_type='deck_file'):
+    endpoint = f'/api/v1.1/boards/{id}/stacks/{stackId}/cards/{cardId}/attachments'
+    url = NEXTCLOUD_URL_DECK + NEXTCLOUD_APP_DECK + endpoint
+    print(url)
+    headers = {'OCS-APIRequest': 'true'}
+
+    data = {'type': attachment_type}
+
+    with open(file_path, 'rb') as file:
+        files = {'file': file}
+        r = requests.post(url,
+                          auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
+                          headers=headers,
+                          data=data,
+                          files=files
+                          )
+    return r
+
+
 if __name__ == "__main__":
     pass
 
@@ -579,12 +636,34 @@ if __name__ == "__main__":
     # for stack in stacks:
     #     print(stack["title"], stack["id"])
 
-    # '''List all titles of cards in deck'''
+    '''List all titles of cards in deck'''
     # stacks = getStacks(42).json()
     # for stack in stacks:
     #     try:
     #         cards = stack["cards"]
     #         for card in cards:
+    #             # print(card)
     #             print(card["title"], card["id"])
     #     except:
     #         pass
+
+    r = assignAUserToACard(42, 121, 1361, {"userId": "monika.schaefer-sso"})
+    r_dict = json.loads(r.text)
+    print(r_dict)
+
+    # r = createANewCard(42, 121,
+    #                {
+    #                    "title": "Testkarte 5",
+    #                    "type": "plain",
+    #                    "order": "999",
+    #                    "description": "Dies ist eine **Testkarte**! Mal sehen ob jetzt auch der Anhang klappt",
+    #                    "duedate": "2023-04-15T13:00:00+00:00"
+    #                }
+    #                )
+    # r_dict = json.loads(r.text)
+    # print(r_dict["id"])
+    # card_Id = json.loads(r.text)["id"]
+    # filepath = os.path.join(os.path.dirname(__file__), "picture2.jpg")
+    # # r = uploadAttachment(42, 121, 1351, {"type": "file"}, filepath)
+    # r = uploadAttachment(42, 121, card_Id, filepath)
+

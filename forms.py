@@ -33,9 +33,9 @@ def listOwnedForms():
     }
     ]
     '''
-    endpoint = '/api/v1.1/forms'
+    endpoint = '/api/v2.2/forms'
     url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
-    headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
+    headers = {'OCS-APIRequest': 'true'}
     r = requests.get(url,
                      auth=(NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD),
                      headers=headers
@@ -54,7 +54,7 @@ def listSharedForms():
     Response: Array of condensed Form Objects, sorted as newest first, similar to List owned Forms.
     See above, 'List owned forms'
     '''
-    endpoint = '/api/v1.1/shared_forms'
+    endpoint = '/api/v2.2/shared_forms'
     url = NEXTCLOUD_URL_FORMS + NEXTCLOUD_APP_FORMS + endpoint
     headers = {'OCS-APIRequest': 'true','Accept': 'application/json'}
     r = requests.get(url,
@@ -694,9 +694,10 @@ def deleteASingleSubmission(id: int):
 
 if __name__ == "__main__":
     r = listOwnedForms()
-    print(f"Status Code: {r.status_code}, \nResponse: \n{r.text}")
-    # listSharedForms()
+    # r = listSharedForms()
     # createNewForm()
+    # r = getFormSubmissions(NEXTCLOUD_FORM)
+    print(f"Status Code: {r.status_code}, \nResponse: \n{r.text}")
     # requestFullDataOfAForm()
     # cloneAForm()
     # updateFormProperties()

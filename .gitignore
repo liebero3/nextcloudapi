@@ -139,9 +139,12 @@ cython_debug/
 
 #secret credentials
 credentials.py
-
+datenschutz.py
+*.xlsx
 #files not to sync
 schadensmeldung1.py
+*.csv
+*.ipynb
 
 # Pip
 Pipfile

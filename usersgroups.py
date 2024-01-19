@@ -3,12 +3,25 @@ import credentials
 from lxml import etree
 import csv
 
-NEXTCLOUD_URL = credentials.url3
+NEXTCLOUD_URL = credentials.url1
 NEXTCLOUD_USERNAME = credentials.username
 NEXTCLOUD_PASSWORD = credentials.password
 
 BASE_URL = f'https://{NEXTCLOUD_USERNAME}:{NEXTCLOUD_PASSWORD}@{NEXTCLOUD_URL.replace("https://", "")}'
 # print(BASE_URL)
+
+
+
+
+def getCircles():
+    '''
+    List all circles
+    '''
+    url = BASE_URL + f'apps/circles/circles'
+    # print(url)
+    headers = {'OCS-APIRequest': 'true'}
+    r = requests.get(url, headers=headers)
+    return r
 
 
 def getUsers():
@@ -253,15 +266,34 @@ def createGroups(listofgroups: list):
 
 
 if __name__ == "__main__":
-    response = getUsers().text
+
+    response = getCircles().text
+    # print(response)
+    # response = getUsers().text
+    # print(response)
     root = etree.fromstring(response)
-    ncusers = list(root[1][0])
+    # ncusers = list(root[1][0])
+
+    '''Alle Circles zurückgeben'''
+    # Iterate over all elements in your XML file
+    for element in root.iter("element"):
+        # Find the sanitized name in the current element
+        sanitized_name = element.find("sanitizedName")
+        
+        # Check if the sanitized name exists and is not None
+        if sanitized_name is not None:
+            # Print the text content of the sanitized name
+            print(sanitized_name.text)
+
+
 
     '''Allen Usern mit numerischem username eine Quota von 100 MB geben'''
     # for u in ncusers:
     #     if u.text.isnumeric():
     #         editUser(u.text, {'key':'quota', 'value':'104857600'})
 
+    '''Daten eines bestimmten users ausgeben'''
+    # print(getUser("christian.schulze-sso").text)
     '''Alle kompletten details von usern ausgeben'''
     # for u in ncusers:
     #     print(getUser(u.text).text)
@@ -279,26 +311,26 @@ if __name__ == "__main__":
     # print(len(gruppenliste))
 
     '''User aus csv zu Gruppen hinzufuegen'''
-    with open('testuser.csv', newline='') as f:
-        reader = csv.reader(f, delimiter=';')
-        data = list(reader)
+    # with open('testuser.csv', newline='') as f:
+    #     reader = csv.reader(f, delimiter=';')
+    #     data = list(reader)
 
-    for user in data:
-        if user[0] == "Vorname":
-            continue
-        # Zur Sicherheit Gruppe erstellen, in die eingefuegt werden soll
-        groups = []
-        groups.append(user[4])
-        b = createGroups(groups)
-        print(b.text)
-        # User aus angegebener Gruppe loeschen
-        liste = []
-        liste.append(user[5])
-        a = removeUserToGroups(user[2], liste)
-        print(a.text)
-        # zuerst versuchen den user zu erstellen. Sollte er schon existieren, gibt es Fehlermeldung
-        a = addUser(user[2], f"{user[0]} {user[1]}",
-                    user[3], "", [f"{user[4]}"], '104857600')
-        print(a.text)
-        # sollte er schon existieren, user zu Gruppen hinzufuegen.
-        c = addUserToGroups(f"{user[2]}", groups)
+    # for user in data:
+    #     if user[0] == "Vorname":
+    #         continue
+    #     # Zur Sicherheit Gruppe erstellen, in die eingefuegt werden soll
+    #     groups = []
+    #     groups.append(user[4])
+    #     b = createGroups(groups)
+    #     print(b.text)
+    #     # User aus angegebener Gruppe loeschen
+    #     liste = []
+    #     liste.append(user[5])
+    #     a = removeUserToGroups(user[2], liste)
+    #     print(a.text)
+    #     # zuerst versuchen den user zu erstellen. Sollte er schon existieren, gibt es Fehlermeldung
+    #     a = addUser(user[2], f"{user[0]} {user[1]}",
+    #                 user[3], "", [f"{user[4]}"], '104857600')
+    #     print(a.text)
+    #     # sollte er schon existieren, user zu Gruppen hinzufuegen.
+    #     c = addUserToGroups(f"{user[2]}", groups)
