@@ -7,6 +7,9 @@ from requests.auth import HTTPBasicAuth
 import credentials
 from difflib import SequenceMatcher
 import mappings
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # nc-credentials
 NEXTCLOUD_USERNAME = credentials.username
@@ -143,8 +146,8 @@ def update_xlsx(csv_path, xlsx_path):
     ws.column_dimensions[px.utils.get_column_letter(ws["K"][0].column)].width = 9
     ws.column_dimensions[px.utils.get_column_letter(ws["M"][0].column)].width = 9
     ws.column_dimensions[px.utils.get_column_letter(ws["N"][0].column)].width = 9
-    ws.column_dimensions[px.utils.get_column_letter(ws["I"][0].column)].width = 11
-    ws.column_dimensions[px.utils.get_column_letter(ws["P"][0].column)].width = 11
+    # ws.column_dimensions[px.utils.get_column_letter(ws["I"][0].column)].width = 11
+    # ws.column_dimensions[px.utils.get_column_letter(ws["P"][0].column)].width = 11
     ws.column_dimensions[px.utils.get_column_letter(ws["Q"][0].column)].width = 11
 
     # Speichern Sie die Arbeitsmappe
@@ -214,6 +217,18 @@ def createElternaccounts(formsdatei, schildexport, kontrolloutput, outputfile):
                         second_matching_schild = schild_row
 
             if matching_schild is not None:
+                if highest_similarity < 0.9:
+                    print(
+                        form_row["Vorname des Elternteils"],
+                        form_row["Nachname des Elternteils"],
+                        fname,
+                        lname,
+                        matching_schild["US_firstName"],
+                        matching_schild["US_lastName"],
+                        matching_schild["AT_webuntisUid"],
+                        highest_similarity,
+                        second_highest_similarity,
+                    )
                 outputtest.append(
                     [
                         form_row["Vorname des Elternteils"],
@@ -264,28 +279,112 @@ def createElternaccounts(formsdatei, schildexport, kontrolloutput, outputfile):
     output_df2.to_csv(outputfile, index=False, sep=";")
 
 
+import re
+
+
+def finde_email_adressen(text):
+    # RegEx-Muster für eine einfache E-Mail-Adresse
+    muster = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
+
+    # Verwende findall, um alle Instanzen zu finden, die dem Muster entsprechen
+    email_adressen = re.findall(muster, text)
+
+    return email_adressen
+
+
+def sende_email(empfaenger_liste, betreff, nachricht, smtp_server, smtp_port, benutzername, passwort):
+    if not empfaenger_liste:
+        return "Keine Empfängeradresse vorhanden."
+
+    empfaenger = empfaenger_liste[0]
+    bcc = empfaenger_liste[1:]
+
+    msg = MIMEMultipart()
+    msg['From'] = benutzername
+    msg['To'] = empfaenger
+    msg['Bcc'] = ", ".join(bcc)
+    msg['Subject'] = betreff
+
+    msg.attach(MIMEText(nachricht, 'plain'))
+
+    try:
+        # Verbindung zum SMTP-Server mit SSL
+        server = smtplib.SMTP_SSL(smtp_server, smtp_port)
+        server.login(benutzername, passwort)
+
+        # E-Mail senden
+        server.send_message(msg)
+        server.quit()
+        return "E-Mail erfolgreich gesendet."
+    except Exception as e:
+        return f"Fehler beim Senden der E-Mail: {e}"
+
+
 if __name__ == "__main__":
-    ncapi = NextcloudFormsAPI(NEXTCLOUD_URL, NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD)
-    file_content = ncapi.getFormSubmissionsCSV(credentials.elternaccounts).content
-    with open("testforms.csv", "wb") as file:
-        file.write(file_content)
-    print("Datei wurde gespeichert")
-    xlsxfile = get_file(
-        webdav_url2, "testxlsx.xlsx", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD
-    )
-    update_xlsx("testforms.csv", "testxlsx.xlsx")
-    put_file(webdav_url, "testxlsx.xlsx", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD)
-    put_file(webdav_url2, "testxlsx.xlsx", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD)
+    # ncapi = NextcloudFormsAPI(NEXTCLOUD_URL, NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD)
+    # file_content = ncapi.getFormSubmissionsCSV(credentials.elternaccounts).content
+    # with open("testforms.csv", "wb") as file:
+    #     file.write(file_content)
+    # print("Datei wurde gespeichert")
+    # xlsxfile = get_file(
+    #     webdav_url2, "testxlsx.xlsx", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD
+    # )
+    # update_xlsx("testforms.csv", "testxlsx.xlsx")
+    # put_file(webdav_url, "testxlsx.xlsx", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD)
+    # put_file(webdav_url2, "testxlsx.xlsx", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD)
 
-    # TODO: Automatisch die benoetigten files einbinden und erstellen
-    # Export.csv liegt im Ordner Elternaccounts und wird durch schild2keycloak automatisch aktualisiert. Muss noch implementiert werden.
-    get_file(credentials.url_export, "Export.csv", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD)
-    createElternaccounts(
-        "testxlsx.xlsx",
-        f"Export.csv",
-        f"elternaccounts-control.csv",
-        f"elternaccounts.csv",
-    )
-    put_file(credentials.url_elterncsv, "elternaccounts.csv", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD)
-    put_file(credentials.url_elterncsvcontrol, "elternaccounts-control.csv", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD)
+    # get_file(
+    #     credentials.url_export, "Export.csv", NEXTCLOUD_USERNAME, NEXTCLOUD_PASSWORD
+    # )
+    # createElternaccounts(
+    #     "testxlsx.xlsx",
+    #     f"Export.csv",
+    #     f"elternaccounts-control.csv",
+    #     f"elternaccounts.csv",
+    # )
+    # put_file(
+    #     credentials.url_elterncsv,
+    #     "elternaccounts.csv",
+    #     NEXTCLOUD_USERNAME,
+    #     NEXTCLOUD_PASSWORD,
+    # )
+    # put_file(
+    #     credentials.url_elterncsvcontrol,
+    #     "elternaccounts-control.csv",
+    #     NEXTCLOUD_USERNAME,
+    #     NEXTCLOUD_PASSWORD,
+    # )
+    # Beispielaufruf der Funktion
+    # Beachten Sie, dass Sie gültige SMTP-Serverdetails einfügen müssen
+    smtp_server = credentials.smtp_server
+    smtp_port = credentials.smtp_port
+    benutzername = credentials.mail_benutzername
+    passwort = credentials.mail_passwort
 
+    betreff = "Webuntis-Elternaccounts wurden erstellt"
+    nachricht = """
+Guten Tag,
+
+die Webuntis-Elternaccounts wurden erstellt. Bitte folgen Sie der Anleitung hier um ihren Account einzurichten.
+
+Freundliche Grüße
+Till Lieber
+"""
+
+    # Hier die vorher extrahierte E-Mail-Liste einfügen
+    empfaenger_liste = [
+        "liebero3@gmail.com",
+        "till.lieber@gmail.com",
+        "till.lieber@luisen-gymnasium-online.de"
+    ]
+
+    ergebnis = sende_email(
+        empfaenger_liste,
+        betreff,
+        nachricht,
+        smtp_server,
+        smtp_port,
+        benutzername,
+        passwort,
+    )
+    print(ergebnis)
