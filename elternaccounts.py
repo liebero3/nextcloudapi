@@ -373,9 +373,7 @@ Till Lieber
 
     # Hier die vorher extrahierte E-Mail-Liste einfügen
     empfaenger_liste = [
-        "liebero3@gmail.com",
-        "till.lieber@gmail.com",
-        "till.lieber@luisen-gymnasium-online.de"
+        "dummymail@luisengym.de"
     ]
 
     ergebnis = sende_email(
